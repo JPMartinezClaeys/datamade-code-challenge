@@ -27,18 +27,29 @@ class AddressParse(APIView):
         # Obtain request from search
         address = request.query_params.get("address", "")
         if not address:
-            logging.info(f"Address not received")
+            logging.info("Address not received")
             return Response({"error": "No address provided"}, status=400)
 
         # Parse input address
         try:
-            address_componenets, address_type = self.parse(address)
-        except usaaddress.RepeatedLabelError as e:
+            address_components, address_type = self.parse(address)
+        except usaddress.RepeatedLabelError as e:
             logging.info(f"Parsing address {address} not succesful: {e}")
-            return Response({"error": f"{str(e)}"}, status=400)
-        except Excepection as e:
+            return Response(
+                {"error": f"Not possible to parse address: {str(e)}"},
+                status=400,
+            )
+        except ParseError as e:
             logging.info(f"Parsing address {address} not succesful: {e}")
-            return Response({"error": f"{str(e)}"}, status=400)
+            return Response(
+                {"error": f"Not possible to parse address: {str(e)}"},
+                status=400,
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Not possible to parse address: {str(e)}"},
+                status=400,
+            )
 
         # Compile results
         data = {
@@ -50,10 +61,6 @@ class AddressParse(APIView):
         return Response(data)
 
     def parse(self, address: str) -> Tuple[Dict, str]:
-        # TODO: Implement this method to return the parsed components of a
-        # given address using usaddress: https://github.com/datamade/usaddress
-        try:
-            address_components, address_type = usaddress.tag(address)
-            return address_components, address_type
-        except Exception as e:
-            logging.info(f"Parsing address {address} not succesful: {e}")
+
+        address_components, address_type = usaddress.tag(address)
+        return address_components, address_type
