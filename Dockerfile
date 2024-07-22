@@ -8,7 +8,7 @@ FROM python:3.8
 
 # Add the NodeSource PPA
 # (see: https://github.com/nodesource/distributions/blob/master/README.md)
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 # Install any additional OS-level packages you need via apt-get. RUN statements
 # add additional layers to your image, increasing its final size. Keep your
@@ -19,7 +19,7 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 #
 # Read more on Dockerfile best practices at the source:
 # https://docs.docker.com/develop/develop-images/dockerfile_best-practices
-RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client nodejs
+RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client nodejs npm
 
 # Inside the container, create an app directory and switch into it
 RUN mkdir /app
