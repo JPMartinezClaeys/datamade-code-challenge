@@ -12,7 +12,6 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-
 class Home(TemplateView):
     template_name = "parserator_web/index.html"
 
@@ -21,8 +20,7 @@ class AddressParse(APIView):
     renderer_classes = [JSONRenderer]
 
     def get(self, request) -> Response:
-        # TODO: Flesh out this method to parse an address string using the
-        # parse() method and return the parsed components to the frontend.
+
 
         # Obtain request from search
         address = request.query_params.get("address", "")
@@ -61,6 +59,16 @@ class AddressParse(APIView):
         return Response(data)
 
     def parse(self, address: str) -> Tuple[Dict, str]:
+        """
+        From a valid string, it returns the parsed address components and address 
+        type using the usaaddress library
+        Input: 
+        - address (str): Address to be parsed
+        Return: 
+        - address_componenets (dict): Dictionary with tag as the key and its 
+        corresponding value as the value
+        - address_type (str): Type of address
+        """
 
         address_components, address_type = usaddress.tag(address)
         return address_components, address_type
